@@ -1,17 +1,31 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+$servername = "your_host";
+$username = "your_user";
+$password = "your_pass";
+$dbname = "your_db";
 
-    $name = htmlspecialchars($_POST['name'] ?? "");
-    $age = htmlspecialchars($_POST['age'] ?? "");
-    $gender = htmlspecialchars($_POST['gender'] ?? "");
-    $email = htmlspecialchars($_POST['email'] ?? "");
-    $phone = htmlspecialchars($_POST['phone'] ?? "");
-    $info = htmlspecialchars($_POST['info'] ?? "");
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-} else {
-    die("Form not submitted!");
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
+
+$sql = "SELECT * FROM students";
+$result = $conn->query($sql);
+
+$data = [];
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+}
+
+header('Content-Type: application/json');
+echo json_encode($data);
+
+$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -42,3 +56,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 </body>
 </html>
+
